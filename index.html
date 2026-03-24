@@ -398,11 +398,9 @@
             <p style="font-size: 1.05rem;">Vou te chamar pra gente conversar e acertar os detalhes direitinho, tá bem?
             </p>
         </div>
-        <!-- IFrame do SoundCloud Invisível (Amor de Fim de Noite - Oficial) -->
-        <iframe id="soundcloud-player" width="0" height="0" scrolling="no" frameborder="no" allow="autoplay"
-            src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/orochi4/orochi-amor-de-fim-de-noite-prod-papatinho&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"
-            style="display:none; visibility:hidden;">
-        </iframe>
+        <!-- Áudio nativo do HTML5 (funciona perfeitamente no celular) -->
+        <audio id="bg-music" src="musica.mp3" loop></audio>
+
 
         <script>
             // DOM Elements
@@ -475,25 +473,10 @@
                 }
             }
 
-            // Controle de Áudio via SoundCloud Widget API
-            let widget;
+            // Controle de Áudio Nativo HTML5
+            const bgMusic = document.getElementById('bg-music');
+            bgMusic.volume = 0.2; // Volume mais baixo de fundo (20%)
             let isMusicPlaying = false;
-
-            // Ao carregar a página, inicializa o widget do SoundCloud que está num iframe oculto
-            window.onload = function () {
-                const iframeElement = document.getElementById('soundcloud-player');
-                widget = SC.Widget(iframeElement);
-
-                // Configurações e volume ao ficar pronto
-                widget.bind(SC.Widget.Events.READY, function () {
-                    widget.setVolume(20); // Volume mais baixo de fundo (20%)
-                });
-
-                // Loop na música quando acabar
-                widget.bind(SC.Widget.Events.FINISH, function () {
-                    widget.play();
-                });
-            };
 
             function changeWord() {
                 atividadeDinamica.classList.add('fade-out');
@@ -510,9 +493,9 @@
             }
 
             btnContinuar.addEventListener('click', () => {
-                // Inicia música no clique para o navegador não bloquear via SC Widget
-                if (!isMusicPlaying && widget) {
-                    widget.play();
+                // Inicia música no clique para o navegador permitir a reprodução
+                if (!isMusicPlaying && bgMusic) {
+                    bgMusic.play().catch(e => console.log("Áudio bloqueado ou não encontrado:", e));
                     isMusicPlaying = true;
                 }
 
